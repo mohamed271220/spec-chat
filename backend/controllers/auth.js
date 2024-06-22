@@ -4,9 +4,9 @@ const generateToken = require('../utils/generateToken');
 
 exports.signup = async (req, res) => {
     try {
-        const { fullName, username, password, confirmedPassword, gender } = req.body;
+        const { fullName, username, password, confirmPassword, gender } = req.body;
 
-        if (password !== confirmedPassword) {
+        if (password !== confirmPassword) {
             return res.status(400).json({ message: "Passwords do not match" });
         }
         const user = await User.findOne({ username: username });
