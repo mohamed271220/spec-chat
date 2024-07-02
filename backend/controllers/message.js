@@ -1,5 +1,6 @@
 const Conversation = require('../models/conversation');
 const Message = require('../models/message');
+const { getReceiverSocketId, io } = require('../socket/socket');
 
 exports.sendMessage = async (req, res) => {
     try {
@@ -25,15 +26,12 @@ exports.sendMessage = async (req, res) => {
         if (newMessage) {
             conversation.messages.push(newMessage);
         }
-
-
-        // SOCKET IO 
-
-        // await conversation.save();
-        // await newMessage.save();
-        // to optimize the code, you can use the following code instead of the above two lines
         await Promise.all([conversation.save(), newMessage.save()]);
 
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('newMessage', newMessage);
+        }
         res.status(200).json(newMessage);
     } catch (error) {
         console.log(error);
@@ -52,7 +50,7 @@ exports.receiveMessage = async (req, res) => {
         if (!conversation) {
             return res.status(200).json([]);
         }
-        res.status(200).json({ messages: conversation.messages });
+        res.status(200).json(conversation.messages);
     } catch (error) {
         console.log("Error in receiveMessage controller: ", error);
         res.status(500).json({ message: "Internal server error" });

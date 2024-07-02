@@ -7,6 +7,7 @@ import { useAuth } from "./context/AuthContext"
 
 function App() {
   const { authUser, setAuthUser } = useAuth();
+  console.log(authUser);
   return (
     <div className='p-4 h-screen flex items-center justify-center'>
       <Routes>

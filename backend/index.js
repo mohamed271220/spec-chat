@@ -3,8 +3,8 @@ const connectToMongoDB = require('./db/connectToMongoDB');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const { server, app } = require('./socket/socket');
 
-const app = express();
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
@@ -20,7 +20,7 @@ app.use('/api/auth', require('./routes/auth'))
 app.use('/api/messages', require('./routes/message'))
 app.use('/api/users', require('./routes/user'))
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectToMongoDB();
     console.log(`Server is running on port ${PORT}`);
 });

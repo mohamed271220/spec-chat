@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 const useSignup = () => {
     const [loading, setLoading] = useState(false)
-    const {authUser, setAuthUser} = useAuth();
+    const { authUser, setAuthUser } = useAuth();
 
     const signup = async ({ fullName, username, password, confirmPassword, gender }) => {
         const success = handleInputErrors({ fullName, username, password, confirmPassword, gender });
@@ -21,14 +21,12 @@ const useSignup = () => {
             const data = await response.json();
             if (response.ok) {
                 toast.success("Account created successfully")
-            localStorage.setItem("chat-user", JSON.stringify(data))
-            setAuthUser(data)
+                localStorage.setItem("chat-user", JSON.stringify(data))
+                setAuthUser(data)
             } else {
                 toast.error(data.message)
                 throw new Error(data.message)
             }
-
-
 
         } catch (error) {
             toast.error(error.message)
