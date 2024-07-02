@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const { server, app } = require('./socket/socket');
+const path = require('path');
+
 
 dotenv.config();
 app.use(express.json());
@@ -14,11 +16,18 @@ app.use(cors({
     credentials: true
 }));
 
+const ___dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/messages', require('./routes/message'))
 app.use('/api/users', require('./routes/user'))
+
+app.use(express.static(path.join(___dirname, '/frontend/dist')));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(___dirname, '/frontend/dist/index.html'));
+})
 
 server.listen(PORT, () => {
     connectToMongoDB();
